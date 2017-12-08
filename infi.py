@@ -2,15 +2,14 @@
 
 
 data = open('data', 'r').read().strip()
-off = data.rfind(']') + 1
 groups = data.count('[')
 
-instructions = zip(*(iter(eval('['  + data[off:].replace(')', '),').rstrip(',') + ']')),) * groups)
+instructions = list(zip(*(iter(eval('['  + data.replace('[', '(').replace(']', ')').replace(')', '),').rstrip(',') + ']')),) * groups))
 
 pdata = []
 
 count = 0
-pos =  map(lambda x: tuple(map(int, x.strip('[,]').split(','))), data[:off].split(']', groups - 1))
+pos =  instructions.pop(0)
 for rnd in instructions:
     pos = [(pos[idx][0] + rnd[idx][0], pos[idx][1] + rnd[idx][1]) for idx in range(groups)]
     if len(pos) != len(set(pos)):
